@@ -6,6 +6,11 @@
 
         public Shader(string vartPath, string fragPath)
         {
+
+        }
+
+        public void Use()
+        {
             
         }
     }

@@ -5,27 +5,39 @@ using System.Runtime.InteropServices;
 
 namespace _3DGame.Core.Graphics
 {
+    public enum VertexArrayDrawType
+    {
+        ArrayDraw,
+        ElementDraw
+    }
+
     public class VertexArray
     {
         private VertexBuffer vertexBuffer;
         private IndexBuffer? indexBuffer;
 
-        private int vertexLocation;
-        private int normalLocation;
-        private int texCoordsLocation;
-        private int colorLocation;
+        private int vertexLocation = 0;
+        private int normalLocation = 1;
+        private int texCoordsLocation = 2;
+        private int colorLocation = 3;
 
         public int Handle;
+
+        public VertexArrayDrawType DrawType { get; set; }
 
         public VertexArray(VertexBuffer vertexBuffer)
         {
             this.vertexBuffer = vertexBuffer;
+
+            DrawType = VertexArrayDrawType.ArrayDraw;
         }
 
         public VertexArray(VertexBuffer vertexBuffer, IndexBuffer indexBuffer)
         {
             this.vertexBuffer = vertexBuffer;
             this.indexBuffer = indexBuffer;
+
+            DrawType = VertexArrayDrawType.ElementDraw;
         }
 
         public void Init()

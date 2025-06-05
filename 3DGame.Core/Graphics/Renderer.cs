@@ -1,8 +1,11 @@
-﻿namespace _3DGame.Core.Graphics
+﻿using OpenTK.Mathematics;
+
+namespace _3DGame.Core.Graphics
 {
     public struct Renderer
     {
-        public Shader? Shader { get; set; }
+        public Matrix4 Transform { get; set; } = Matrix4.Identity;
+        public Shader Shader { get; set; }
 
         public Renderer(Shader shader)
         {
