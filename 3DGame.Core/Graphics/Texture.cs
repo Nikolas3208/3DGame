@@ -7,7 +7,7 @@ namespace _3DGame.Core;
 
 public enum TextureType
 {
-    Deffuse,
+    Diffuse,
     Normal,
     Specular,
     CubeMap
@@ -32,7 +32,7 @@ public class Texture
 
     private void UpdateSmooth()
     {
-        Bind();
+        GL.BindTexture(TextureTarget.Texture2D, Handle);
         if (smooth)
         {
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
@@ -43,23 +43,13 @@ public class Texture
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
         }
-        Unbind();
+        GL.BindTexture(TextureTarget.Texture2D, 0);
     }
 
     public void Use(TextureUnit textureUnit)
     {
         GL.ActiveTexture(textureUnit);
         GL.BindTexture(TextureTarget.Texture2D, Handle);
-    }
-
-    public void Bind()
-    {
-        GL.BindTexture(TextureTarget.Texture2D, Handle);
-    }
-
-    public void Unbind()
-    {
-        GL.BindTexture(TextureTarget.Texture2D, 0);
     }
 
     public static Texture LoadFromFile(string path, bool smooth = false)

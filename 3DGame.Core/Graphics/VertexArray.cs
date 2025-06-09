@@ -8,7 +8,7 @@ namespace _3DGame.Core.Graphics
     public enum VertexArrayDrawType
     {
         ArrayDraw,
-        ElementDraw
+        DrawElements
     }
 
     public class VertexArray
@@ -37,15 +37,12 @@ namespace _3DGame.Core.Graphics
             this.vertexBuffer = vertexBuffer;
             this.indexBuffer = indexBuffer;
 
-            DrawType = VertexArrayDrawType.ElementDraw;
+            DrawType = VertexArrayDrawType.DrawElements;
         }
 
         public void Init()
         {
             int size = Marshal.SizeOf(typeof(Vertex));
-            int v3Size = Marshal.SizeOf(typeof(Vector3));
-            int v2Size = Marshal.SizeOf(typeof(Vector2));
-            int color4Size = Marshal.SizeOf(typeof(Color4));
 
             Handle = GL.GenVertexArray();
 
@@ -55,13 +52,13 @@ namespace _3DGame.Core.Graphics
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, size, 0);
 
             GL.EnableVertexAttribArray(normalLocation);
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, size, v3Size);
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, size, 12);
 
             GL.EnableVertexAttribArray(texCoordsLocation);
-            GL.VertexAttribPointer(texCoordsLocation, 2, VertexAttribPointerType.Float, false, size, 3 * v2Size);
+            GL.VertexAttribPointer(texCoordsLocation, 2, VertexAttribPointerType.Float, false, size, 24);
 
             GL.EnableVertexAttribArray(colorLocation);
-            GL.VertexAttribPointer(colorLocation, 4, VertexAttribPointerType.Float, false, size, 4 * color4Size);
+            GL.VertexAttribPointer(colorLocation, 4, VertexAttribPointerType.Float, false, size, 32);
 
             Unbind();
 

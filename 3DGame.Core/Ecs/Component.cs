@@ -6,7 +6,9 @@ namespace _3DGame.Core.Ecs
     {
         public string Name { get; } = nameof(Component);
 
-        public GameObject? Perent { get; }
+        public GameObject? GameObject { get; set; }
+
+        public Scene Scene => GameObject!.Scene;
 
         public virtual void Start()
         {
@@ -14,6 +16,11 @@ namespace _3DGame.Core.Ecs
         }
 
         public virtual void Update(float deltaTime)
+        {
+
+        }
+
+        public virtual void FixedUpdate(float fixedDeltaTime)
         {
 
         }

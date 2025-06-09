@@ -4,7 +4,9 @@ namespace _3DGame.Core.Graphics
 {
     public struct Renderer
     {
-        public Matrix4 Transform { get; set; } = Matrix4.Identity;
+        private Matrix4 transform = Matrix4.Identity;
+
+        public Matrix4 Transform { get => transform; set { transform = value; Shader?.SetMatrix4("model", Transform); } }
         public Shader Shader { get; set; }
 
         public Renderer(Shader shader)
@@ -12,6 +14,6 @@ namespace _3DGame.Core.Graphics
             Shader = shader;
         }
 
-        public static Renderer Default => new Renderer(new Shader("default.vert", "default.frag"));
+        public static Renderer Default => new Renderer(new Shader("Shaders\\default.vert", "Shaders\\default.frag"));
     }
 }
