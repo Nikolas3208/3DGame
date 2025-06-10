@@ -77,9 +77,13 @@ namespace _3DGame.Core
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            renderer.Shader.SetMatrix4("projection", activeCamera!.GetProjectionMatrix());
-            renderer.Shader.SetMatrix4("view", activeCamera!.GetViewMatrix());
-            renderer.Shader.SetVector3("viewPos", activeCamera.Position);
+            var projection = activeCamera != null ? activeCamera.GetProjectionMatrix() : Matrix4.Identity;
+            var view = activeCamera != null ? activeCamera.GetViewMatrix() : Matrix4.Identity;
+            var viewPosition = activeCamera != null ? activeCamera.Position : new Vector3();
+
+            renderer.Shader.SetMatrix4("projection", projection);
+            renderer.Shader.SetMatrix4("view", view);
+            renderer.Shader.SetVector3("viewPos", viewPosition);
 
             renderer.Shader.SetInt("lightCount", lights.Count);
 
@@ -100,8 +104,8 @@ namespace _3DGame.Core
                 renderer.Shader.SetFloat($"lights[{i}].constant", light.Constant);
                 renderer.Shader.SetFloat($"lights[{i}].quadratic", light.Quadratic);
 
-                renderer.Shader.SetFloat($"lights[{i}].cutOff", light.CutOff);
-                renderer.Shader.SetFloat($"lights[{i}].outerCutOff", light.OuterCutOff);
+                renderer.Shader.SetFloat($"lights[{i}].cutOff", MathF.Cos(MathHelper.DegreesToRadians(light.CutOff)));
+                renderer.Shader.SetFloat($"lights[{i}].outerCutOff", MathF.Cos(MathHelper.DegreesToRadians(light.OuterCutOff)));
 
                 renderer.Shader.SetInt($"lights[{i}].type", (int)light.Type);
             }
@@ -116,7 +120,7 @@ namespace _3DGame.Core
         {
             Size = size;
 
-            activeCamera!.AspectRatio = size.X / (float)size.Y;
+            activeCamera?.UpdateAspectRatio(size.X / (float)size.Y);
 
             GL.Viewport(0, 0, size.X, size.Y);
         }
@@ -145,6 +149,8 @@ namespace _3DGame.Core
 
             return gameObjects[index];
         }
+
+        public virtual List<GameObject> GetAllGameObject() => gameObjects;
 
         public virtual bool RemoveGameObject(GameObject obj)
         {

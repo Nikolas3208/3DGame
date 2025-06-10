@@ -87,4 +87,9 @@ public class Texture
 
         return new Texture(handle, size, smooth);
     }
+
+    ~Texture()
+    {
+        GL.DeleteTexture(Handle);
+    }
 }

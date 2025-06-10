@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DGame", "3DGame\3DGame.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DGame.Core", "3DGame.Core\3DGame.Core.csproj", "{74DC8951-0D08-4C8D-89D4-11AF68EEF6C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DGame.Editor", "3DGame.Editor\3DGame.Editor.csproj", "{40E792C3-612C-4CE6-A0E5-4570AFBD5D78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{74DC8951-0D08-4C8D-89D4-11AF68EEF6C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74DC8951-0D08-4C8D-89D4-11AF68EEF6C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74DC8951-0D08-4C8D-89D4-11AF68EEF6C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40E792C3-612C-4CE6-A0E5-4570AFBD5D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40E792C3-612C-4CE6-A0E5-4570AFBD5D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40E792C3-612C-4CE6-A0E5-4570AFBD5D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40E792C3-612C-4CE6-A0E5-4570AFBD5D78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

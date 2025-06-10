@@ -77,6 +77,6 @@ namespace _3DGame.Core.Ecs.Components
 
         public static Light Directional => new Light(new Vector3(0.5f), new Vector3(0.2f), new Vector3(0.5f), new Vector4(1), 0, 0, 0, 0, 0, LightType.Directional);
         public static Light Point => new Light(new Vector3(0.5f), new Vector3(0.2f), new Vector3(0.5f), new Vector4(1), 0.09f, 1f, 0.32f, 0, 0, LightType.Point);
-        public static Light Spot => new Light(new Vector3(0.5f), new Vector3(0.2f), new Vector3(0.5f), new Vector4(1), 0.09f, 1f, 0.32f, MathF.Cos(MathHelper.DegreesToRadians(12.5f)), MathF.Cos(MathHelper.DegreesToRadians(17.5f)), LightType.Point);
+        public static Light Spot => new Light(new Vector3(0.5f), new Vector3(0.2f), new Vector3(0.5f), new Vector4(1), 0.09f, 1f, 0.32f, 12.5f, 17.5f, LightType.Point);
     }
 }

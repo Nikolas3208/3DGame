@@ -14,12 +14,8 @@ namespace _3DGame
             SetActiveScene(GetSceneAt(0)!);
         }
 
-        public void Run() => window.Run();
-
         protected override void Start()
         {
-            GL.ClearColor(Color4.Cyan);
-
             base.Start();
         }
     }

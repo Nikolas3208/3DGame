@@ -64,6 +64,7 @@ namespace _3DGame.Core.Ecs
             return (T)components.Find(c => c is T)!;
         }
 
+        public List<Component> GetAllComponent() => components;
         public bool ContainsComponent<T>() where T : Component
         {
             return components.Find(c => c is T) == null ? false : true;

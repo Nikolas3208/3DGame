@@ -8,7 +8,7 @@ namespace _3DGame.Core.Buffers
     {
         private Vertex[] vertices;
 
-        private int Handle;
+        public int Handle { get; private set; }
 
         public VertexBuffer(Vertex[] vertices)
         {

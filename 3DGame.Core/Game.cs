@@ -16,10 +16,7 @@ namespace _3DGame.Core
         {
             this.window = window;
 
-            window.Load += () => { Start(); };
-            window.UpdateFrame += (FrameEventArgs e) => { Update((float)e.Time); };
-            window.RenderFrame += (FrameEventArgs e) => { Draw(renderer); };
-            window.Resize += Resize;
+            Follows(window);
 
             scenes = new List<Scene>();
         }
@@ -27,14 +24,21 @@ namespace _3DGame.Core
         public Game(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
         {
             window = new Window(gameWindowSettings, nativeWindowSettings);
+
+            Follows(window);
+
+            scenes = new List<Scene>();
+        }
+
+        public void Run() => window.Run();
+        protected virtual void Follows(Window window)
+        {
             window.Load += () => { Start(); };
             window.UpdateFrame += (FrameEventArgs e) => { Update((float)e.Time); };
-            window.RenderFrame += (FrameEventArgs e) => 
-            { Draw(renderer); };
+            window.RenderFrame += (FrameEventArgs e) => { Draw(renderer); };
             window.Resize += Resize;
             window.MouseWheel += (MouseWheelEventArgs e) => { MouseWheel(e.Offset); };
 
-            scenes = new List<Scene>();
         }
 
         protected virtual void Start()

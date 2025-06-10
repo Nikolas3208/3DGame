@@ -16,7 +16,7 @@ namespace _3DGame.Core.Ecs.Components
 
         public Vector3 Position { get; private set; }
 
-        public float AspectRatio { private get; set; }
+        public float AspectRatio { get; private set; }
 
         public Vector3 Front => _front;
 
@@ -76,6 +76,11 @@ namespace _3DGame.Core.Ecs.Components
         public Matrix4 GetProjectionMatrix()
         {
             return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 100f);
+        }
+
+        public void UpdateAspectRatio(float newAspectRatio)
+        {
+            AspectRatio = newAspectRatio;
         }
 
         private void UpdateVectors()
