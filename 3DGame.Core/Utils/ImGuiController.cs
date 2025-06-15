@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 
-namespace _3DGame.Editor
+namespace _3DGame.Core.Utils
 {
     public class ImGuiController : IDisposable
     {
@@ -107,35 +107,34 @@ namespace _3DGame.Editor
             RecreateFontDeviceTexture();
 
             string VertexSource = @"#version 330 core
+                uniform mat4 projection_matrix;
 
-uniform mat4 projection_matrix;
+                layout(location = 0) in vec2 in_position;
+                layout(location = 1) in vec2 in_texCoord;
+                layout(location = 2) in vec4 in_color;
 
-layout(location = 0) in vec2 in_position;
-layout(location = 1) in vec2 in_texCoord;
-layout(location = 2) in vec4 in_color;
+                out vec4 color;
+                out vec2 texCoord;
 
-out vec4 color;
-out vec2 texCoord;
+                void main()
+                {
+                    gl_Position = projection_matrix * vec4(in_position, 0, 1);
+                    color = in_color;
+                    texCoord = in_texCoord;
+                }";
 
-void main()
-{
-    gl_Position = projection_matrix * vec4(in_position, 0, 1);
-    color = in_color;
-    texCoord = in_texCoord;
-}";
             string FragmentSource = @"#version 330 core
+                uniform sampler2D in_fontTexture;
 
-uniform sampler2D in_fontTexture;
+                in vec4 color;
+                in vec2 texCoord;
 
-in vec4 color;
-in vec2 texCoord;
+                out vec4 outputColor;
 
-out vec4 outputColor;
-
-void main()
-{
-    outputColor = color * texture(in_fontTexture, texCoord);
-}";
+                void main()
+                {
+                    outputColor = color * texture(in_fontTexture, texCoord);
+                }";
 
             _shader = CreateProgram("ImGui", VertexSource, FragmentSource);
             _shaderProjectionMatrixLocation = GL.GetUniformLocation(_shader, "projection_matrix");
@@ -280,12 +279,12 @@ void main()
             io.KeySuper = KeyboardState.IsKeyDown(Keys.LeftSuper) || KeyboardState.IsKeyDown(Keys.RightSuper);
         }
 
-        internal void PressChar(char keyChar)
+        public void PressChar(char keyChar)
         {
             PressedChars.Add(keyChar);
         }
 
-        internal void MouseScroll(Vector2 offset)
+        public void MouseScroll(Vector2 offset)
         {
             ImGuiIOPtr io = ImGui.GetIO();
 

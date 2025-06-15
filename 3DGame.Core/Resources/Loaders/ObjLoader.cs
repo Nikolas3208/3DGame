@@ -45,12 +45,12 @@ namespace _3DGame.Core.Resources.Loaders
                         break;
 
                     case "mtllib":
-                        string mtlPath = Path.Combine(baseDir, parts[1]);
-                        MtlLoader.Load(mtlPath, model);
+                        //string mtlPath = Path.Combine(baseDir, parts[1]);
+                        //MtlLoader.Load(mtlPath, model);
                         break;
 
                     case "usemtl":
-                        currentMaterial = parts[1];
+                        //currentMaterial = parts[1];
                         break;
                 }
             }

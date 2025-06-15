@@ -16,11 +16,9 @@ public class Mesh
 
     public string Name { get; set; } = "Mesh";
 
-    public Material Material { get; set; }
-
     public Mesh()
     {
-        Material = Material.Default;
+
     }
 
     public Mesh(Vertex[] vertices)
@@ -33,8 +31,6 @@ public class Mesh
 
         vertexArray = new VertexArray(vertexBuffer);
         vertexArray.Init();
-
-        Material = Material.Default;
     }
 
     public Mesh(Vertex[] vertices, uint[] indices)
@@ -53,8 +49,6 @@ public class Mesh
 
         vertexArray = new VertexArray(vertexBuffer, indexBuffer);
         vertexArray.Init();
-
-        Material = Material.Default;
     }
 
     public void Draw(Renderer renderer)
@@ -62,9 +56,7 @@ public class Mesh
         if (vertexArray == null)
             return;
 
-
         renderer.Shader.Use();
-        Material.Draw(renderer);
 
         vertexArray.Bind();
 
@@ -79,7 +71,6 @@ public class Mesh
         }
 
         vertexArray.Unbind();
-        Material.UnbindTexture(renderer);
     }
 
     public int GetVerticesCount() => vertexCount;

@@ -6,18 +6,23 @@ namespace _3DGame.Core;
 
 public class Material
 {
-    public Vector3 DiffuseColor { get; set; }
-    public Vector3 SpecularColor { get; set; }
-    public Vector3 AmbientColor { get; set; }
+    public Vector3 Diffuse { get; set; }
+    public Vector3 Specular { get; set; }
+    public Vector3 Ambient { get; set; }
     public Vector3 Color { get; set; } = Vector3.One;
 
-    public Vector3 TextureScale { get; set; } = new Vector3(10f);
+    public Vector3 TextureScale { get; set; } = new Vector3(1f);
+    public Vector3 TextureOffset { get; set; } = Vector3.Zero;
 
+    public float NormalStrength { get; set; } = 1.0f;
+    public float HeightScale { get; set; } = 0.1f;
     public float Shininess { get; set; }
 
     public Dictionary<TextureType, Texture> Textures;
 
     public string Name { get; } = nameof(Material);
+
+    public int useTBN = 1;
 
     public Material(string name)
     {
@@ -27,9 +32,9 @@ public class Material
 
     public Material(Material material)
     {
-        DiffuseColor = material.DiffuseColor;
-        SpecularColor = material.SpecularColor;
-        AmbientColor = material.AmbientColor;
+        Diffuse = material.Diffuse;
+        Specular = material.Specular;
+        Ambient = material.Ambient;
         Shininess = material.Shininess;
         Textures = material.Textures;
 
@@ -38,13 +43,33 @@ public class Material
 
     public Material(Vector3 diffuseColor, Vector3 specularColor, Vector3 ambientColor, float shininess, string name)
     {
-        DiffuseColor = diffuseColor;
-        SpecularColor = specularColor;
-        AmbientColor = ambientColor;
+        Diffuse = diffuseColor;
+        Specular = specularColor;
+        Ambient = ambientColor;
         Shininess = shininess;
         Name = name;
 
         Textures = new Dictionary<TextureType, Texture>();
+    }
+
+    public void AddTexture(TextureType type, Texture texture)
+    {
+        if (Textures.ContainsKey(type))
+        {
+            Textures[type] = texture;
+        }
+        else
+        {
+            Textures.Add(type, texture);
+        }
+    }
+
+    public void RemoveTexture(TextureType type)
+    {
+        if (Textures.ContainsKey(type))
+        {
+            Textures.Remove(type);
+        }
     }
 
     public void Draw(Renderer renderer)
@@ -53,11 +78,15 @@ public class Material
 
         renderer.Shader.Use();
 
-        renderer.Shader.SetVector3("material.diffuseColor", DiffuseColor);
-        renderer.Shader.SetVector3("material.specularColor", SpecularColor);
-        renderer.Shader.SetVector3("material.ambientColor", AmbientColor);
+        renderer.Shader.SetVector3("material.diffuseColor", Diffuse);
+        renderer.Shader.SetVector3("material.specularColor", Specular);
+        renderer.Shader.SetVector3("material.ambientColor", Ambient);
         renderer.Shader.SetVector3("material.color", Color);
         renderer.Shader.SetVector3("material.textureScale", TextureScale);
+        renderer.Shader.SetVector3("material.textureOffset", TextureOffset);
+        renderer.Shader.SetFloat("material.normalStrength", NormalStrength);
+        renderer.Shader.SetFloat("material.heightScale", HeightScale);
+        renderer.Shader.SetInt("material.useTBN", useTBN);
 
         renderer.Shader.SetFloat("material.shininess", Shininess);
 
@@ -65,8 +94,8 @@ public class Material
         {
             var textureValue = texture.Value;
 
-            renderer.Shader.SetInt($"material.{texture.Key}", textureUnit);
             renderer.Shader.SetInt($"material.use{texture.Key}Map", 1);
+            renderer.Shader.SetInt($"material.{texture.Key}", textureUnit);
 
             textureValue.Use(TextureUnit.Texture0 + textureUnit);
 
@@ -85,5 +114,5 @@ public class Material
         }
     }
 
-    public static Material Default => new Material(new Vector3(0.714f, 0.4284f, 0.18144f), new Vector3(0.393548f, 0.271906f, 0.166721f), new Vector3(0.2125f, 0.1275f, 0.054f), 25.6f, "Bronze");
+    public static Material BaseMaterial => new Material(new Vector3(1f), new Vector3(0.0f), new Vector3(0.5f), 10f, "Base Material");
 }

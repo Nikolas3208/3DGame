@@ -2,15 +2,15 @@
 
 namespace _3DGame.Core.Ecs.Components
 {
-    public class Transformable : Component
+    public class Transform : Component
     {
         private Vector3 position;
         private Vector3 rotation;
         private Vector3 scale;
 
-        private Matrix4 transform = Matrix4.Identity;
+        private Matrix4 transformModel = Matrix4.Identity;
 
-        public Transformable()
+        public Transform()
         {
             position = new Vector3(0);
             rotation = new Vector3(0);
@@ -21,16 +21,16 @@ namespace _3DGame.Core.Ecs.Components
         public Vector3 Rotation { get => rotation; set { rotation = value; UpdateTransform(); } }
         public Vector3 Scale { get => scale; set { scale = value; UpdateTransform(); } }
 
-        public Matrix4 Transform => transform;
+        public Matrix4 TransformModel => transformModel;
 
         private void UpdateTransform()
         {
-            transform = Matrix4.Identity;
-            transform *= Matrix4.CreateScale(Scale);
-            transform *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(Rotation.X));
-            transform *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(Rotation.Y));
-            transform *= Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Rotation.Z));
-            transform *= Matrix4.CreateTranslation(Position);
+            transformModel = Matrix4.Identity;
+            transformModel *= Matrix4.CreateScale(Scale);
+            transformModel *= Matrix4.CreateRotationX(MathHelper.DegreesToRadians(Rotation.X));
+            transformModel *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(Rotation.Y));
+            transformModel *= Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Rotation.Z));
+            transformModel *= Matrix4.CreateTranslation(Position);
         }
     }
 }

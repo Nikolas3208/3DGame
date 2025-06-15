@@ -4,23 +4,15 @@ using _3DGame.Core.Ecs.Components;
 using _3DGame.Core.Graphics;
 using _3DGame.Core.Physics;
 using _3DGame.Core.Physics.Colliders;
-using _3DGame.Core.Resources;
 using _3DGame.Core.Resources.Loaders;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace _3DGame
 {
     public class MyScene : Scene
     {
         private GameObject mainCamera;
-
-        private bool cursoreGrabbed = false;
-
-        private float cameraSpeed = 1.5f;
-        private float sensitivity = 0.2f;
 
         public MyScene(Vector2i size, Game game) : base(size, game)
         {
@@ -30,8 +22,8 @@ namespace _3DGame
             GL.CullFace(TriangleFace.Back);
 
             mainCamera = new GameObject(this, "Main camera");
-            mainCamera.AddComponent(new Camera(new Vector3(), size.X / (float)size.Y));
-            mainCamera.GetComponent<Transformable>()!.Position = new Vector3(0, 0, 10);
+            mainCamera.AddComponent(new Camera(size.X / (float)size.Y));
+            mainCamera.GetComponent<Transform>()!.Position = new Vector3(0, 0, 10);
 
             AddGameObject(mainCamera);
 
@@ -41,8 +33,8 @@ namespace _3DGame
             light.AddComponent(Light.Directional);
             light.AddComponent(new MeshRender(MeshLoader.LoadMesh("Assets\\GreenCube.obj")));
 
-            light.GetComponent<Transformable>()!.Position = new Vector3(2.5f, -2.5f, 0f);
-            light.GetComponent<Transformable>()!.Scale = new Vector3(0.2f);
+            light.GetComponent<Transform>()!.Position = new Vector3(2.5f, -2.5f, 0f);
+            light.GetComponent<Transform>()!.Scale = new Vector3(0.2f);
 
             AddGameObject(light);
 
@@ -50,16 +42,16 @@ namespace _3DGame
             cube.AddComponent(new MeshRender(MeshLoader.LoadMesh("Assets\\Cube.obj")));
             cube.AddComponent(new RigidBody(RigidBodyType.Dynamic));
             cube.AddComponent(new BoxCollider(new Vector3(), new Vector3(2)));
-            cube.GetComponent<Transformable>()!.Position = new Vector3(0, 0, 0);
-            cube.GetComponent<Transformable>()!.Scale = new Vector3(0.5f);
+            cube.GetComponent<Transform>()!.Position = new Vector3(0, 0, 0);
+            cube.GetComponent<Transform>()!.Scale = new Vector3(0.5f);
 
             AddGameObject(cube);
 
             var plain = new GameObject(this, "plain");
             plain.AddComponent(new MeshRender(MeshLoader.LoadMesh("Assets\\Cube.obj")));
             plain.AddComponent(new RigidBody(RigidBodyType.Static));
-            plain.GetComponent<Transformable>()!.Position = new Vector3(0, -10, 0);
-            plain.GetComponent<Transformable>()!.Scale = new Vector3(10, 0.2f, 10);
+            plain.GetComponent<Transform>()!.Position = new Vector3(0, -10, 0);
+            plain.GetComponent<Transform>()!.Scale = new Vector3(10, 0.2f, 10);
 
             var polygonCollider = new PolygonCollider();
             polygonCollider.SetMesh(MeshLoader.LoadMesh("Assets\\Cube.obj"));
@@ -71,7 +63,7 @@ namespace _3DGame
             var cube2 = new GameObject(this, "plain");
             cube2.AddComponent(new MeshRender(MeshLoader.LoadMesh("Assets\\Cube.obj")));
             cube2.AddComponent(new RigidBody(RigidBodyType.Dynamic));
-            cube2.GetComponent<Transformable>()!.Position = new Vector3(3, -9, 0);
+            cube2.GetComponent<Transform>()!.Position = new Vector3(3, -9, 0);
 
             polygonCollider = new PolygonCollider();
             polygonCollider.SetMesh(MeshLoader.LoadMesh("Assets\\Cube.obj"));
@@ -80,11 +72,9 @@ namespace _3DGame
 
             AddGameObject(cube2);
 
+            cube2.AddComponent(new PlayerController());
+
             DebugRender.Init(new Shader("Shaders\\line.vert", "Shaders\\line.frag"));
-
-            ScriptsManager.LoadScripts("Assets");
-
-            cube.AddComponent(ScriptsManager.GetScript("PlayerController")!);
         }
 
         public override void Start()
@@ -94,59 +84,7 @@ namespace _3DGame
 
         public override void Update(float deltaTime)
         {
-            base.Update(deltaTime);            
-
-            var transform = mainCamera.GetComponent<Transformable>();
-            var camera = mainCamera.GetComponent<Camera>();
-
-            if(Keyboard.IsKeyReleased(Keys.C))
-            {
-                if (!cursoreGrabbed)
-                {
-                    game.GetWindow().CursorState = CursorState.Grabbed;
-
-                    cursoreGrabbed = true;
-                }
-                else
-                {
-                    game.GetWindow().CursorState = CursorState.Normal;
-
-                    cursoreGrabbed = false;
-                }
-            }
-
-            if (camera != null && transform != null)
-            {
-                if (false)
-                {
-                    if (Keyboard.IsKeyDown(Keys.W))
-                    {
-                        transform.Position += camera.Front * cameraSpeed * deltaTime;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.S))
-                    {
-                        transform.Position -= camera.Front * cameraSpeed * deltaTime;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.A))
-                    {
-                        transform.Position -= camera.Right * cameraSpeed * deltaTime;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.D))
-                    {
-                        transform.Position += camera.Right * cameraSpeed * deltaTime;
-                    }
-                    if (Keyboard.IsKeyDown(Keys.LeftShift))
-                    {
-                        transform.Position -= camera.Up * cameraSpeed * deltaTime;
-                    }
-                }
-
-                var deltaX = Mouse.GetDeltaPosition().X;
-                var deltaY = Mouse.GetDeltaPosition().Y;
-
-                camera.Yaw += deltaX * sensitivity;
-                //camera.Pitch -= deltaY * sensitivity;
-            }
+            base.Update(deltaTime);
         }
 
         public override void FixedUpdate(float fixedDeltaTime)
@@ -165,7 +103,7 @@ namespace _3DGame
         {
             base.MouseWheel(offset);
 
-            mainCamera.GetComponent<Camera>()!.Fov -= offset.Y;
+            mainCamera.GetComponent<Camera>()!.Rotation -= new Vector3(0, offset.Y, 0);
         }
     }
 }

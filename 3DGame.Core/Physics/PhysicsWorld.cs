@@ -80,8 +80,8 @@ namespace _3DGame.Core.Physics
 
                 if (collider!.Intersects(otherCollider!, out Vector3 normal, out float depth))
                 {
-                    body.OnCollided(new CollidedEventArgs(otherBody.GameObject!, otherBody, otherCollider!, normal, depth));
-                    otherBody.OnCollided(new CollidedEventArgs(body.GameObject!, body, collider, normal, depth));
+                    body.GameObject?.OnCollided(new CollidedEventArgs(otherBody.GameObject!, otherBody, otherCollider!, normal, depth));
+                    otherBody.GameObject?.OnCollided(new CollidedEventArgs(body.GameObject!, body, collider, normal, depth));
 
                     SeparateBodies(body, otherBody, normal, depth);
 

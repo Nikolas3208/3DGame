@@ -1,20 +1,34 @@
 ﻿using _3DGame.Core.Graphics;
-using _3DGame.Core.Physics;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using System.Reflection;
+using System.Runtime.Loader;
 
 namespace _3DGame.Core.Ecs.Components
 {
     public class ScriptComponent : Component
     {
-        public T? GetComponent<T>() where T : Component
+        public Component Script { get; }
+
+        public ScriptComponent(Component script)
         {
-            return GameObject?.GetComponent<T>();
+            Script = script ?? throw new ArgumentNullException(nameof(script), "Script cannot be null.");
         }
 
-        public override void Start() { }
-        public override void Update(float deltaTime) { }
-        public override void FixedUpdate(float deltaTime) { }
-        public override void Draw(Renderer renderer) { }
-
-        public virtual void OnCollided(CollidedEventArgs args) { }
+        public override void Start() 
+        {
+            Script?.Start();
+        }
+        public override void Update(float deltaTime)
+        {
+            Script?.Update(deltaTime);
+        }
+        public override void FixedUpdate(float deltaTime)
+        {
+            Script?.FixedUpdate(deltaTime);
+        }
+        public override void Draw(Renderer renderer) { Script.Draw(renderer); }
     }
 }

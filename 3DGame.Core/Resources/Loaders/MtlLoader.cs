@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _3DGame.Core.Resources.Loaders
 {
@@ -33,7 +30,7 @@ namespace _3DGame.Core.Resources.Loaders
                         break;
 
                     case "Kd":
-                        current.DiffuseColor = new Vector3(
+                        current.Diffuse = new Vector3(
                             float.Parse(parts[1], CultureInfo.InvariantCulture),
                             float.Parse(parts[2], CultureInfo.InvariantCulture),
                             float.Parse(parts[3], CultureInfo.InvariantCulture)
@@ -41,7 +38,7 @@ namespace _3DGame.Core.Resources.Loaders
                         break;
 
                     case "Ka":
-                        current.AmbientColor = new Vector3(
+                        current.Ambient = new Vector3(
                             float.Parse(parts[1], CultureInfo.InvariantCulture),
                             float.Parse(parts[2], CultureInfo.InvariantCulture),
                             float.Parse(parts[3], CultureInfo.InvariantCulture)
@@ -49,7 +46,7 @@ namespace _3DGame.Core.Resources.Loaders
                         break;
 
                     case "Ks":
-                        current.SpecularColor = new Vector3(
+                        current.Specular = new Vector3(
                             float.Parse(parts[1], CultureInfo.InvariantCulture),
                             float.Parse(parts[2], CultureInfo.InvariantCulture),
                             float.Parse(parts[3], CultureInfo.InvariantCulture)

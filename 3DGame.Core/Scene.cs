@@ -2,6 +2,7 @@
 using _3DGame.Core.Ecs.Components;
 using _3DGame.Core.Graphics;
 using _3DGame.Core.Physics;
+using _3DGame.Core.Resources;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
@@ -21,11 +22,12 @@ namespace _3DGame.Core
 
 
         public string Name { get; set; } = nameof(Scene);
-
+        public string Direction { get; set; }
         public bool IsActive { get; set; }
         public bool IsStarted { get; set; }
-
         public Vector2i Size { get; set; }
+
+        public AssetsManager AssetsManager { get; set; }
 
         public Scene(Vector2i size, Game game)
         {
@@ -37,6 +39,9 @@ namespace _3DGame.Core
             physicsWorld = new PhysicsWorld(this);
 
             GL.Enable(EnableCap.DepthTest);
+
+            AssetsManager = new AssetsManager();
+            AssetsManager.LoadAssets("Assets");
         }
 
         public virtual void Start()
@@ -104,8 +109,8 @@ namespace _3DGame.Core
                 renderer.Shader.SetFloat($"lights[{i}].constant", light.Constant);
                 renderer.Shader.SetFloat($"lights[{i}].quadratic", light.Quadratic);
 
-                renderer.Shader.SetFloat($"lights[{i}].cutOff", MathF.Cos(MathHelper.DegreesToRadians(light.CutOff)));
-                renderer.Shader.SetFloat($"lights[{i}].outerCutOff", MathF.Cos(MathHelper.DegreesToRadians(light.OuterCutOff)));
+                renderer.Shader.SetFloat($"lights[{i}].cutOff", light.CosCutOff);
+                renderer.Shader.SetFloat($"lights[{i}].outerCutOff", light.CosOterCutOff);
 
                 renderer.Shader.SetInt($"lights[{i}].type", (int)light.Type);
             }

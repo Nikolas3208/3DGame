@@ -6,9 +6,11 @@
 
         public Texture? Texture { get { if (texture == null) { LoadAsset(); } return texture; } }
 
+        public int Handle { get { if (texture == null) { LoadAsset(); } return texture!.Handle; } }
+
         public TextureAsset(string fullPath, string name) : base(fullPath, name)
         {
-
+            LoadAsset();
         }
 
         protected override void LoadAsset() 

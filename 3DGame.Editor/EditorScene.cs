@@ -24,29 +24,29 @@ namespace _3DGame.Editor
 
         public EditorScene(Vector2i size, Game game) : base(size, game)
         {
-            game.GetWindow().UpdateFrequency = 60;
+            //game.GetWindow().UpdateFrequency = 60;
 
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(TriangleFace.Back);
+            //L.Enable(EnableCap.CullFace);
+            //GL.CullFace(TriangleFace.Back);
 
             mainCamera = new GameObject(this, "Main camera");
-            mainCamera.AddComponent(new Camera(new Vector3(), size.X / (float)size.Y));
-            mainCamera.GetComponent<Transformable>()!.Position = new Vector3(0, 0, 10);
+            mainCamera.AddComponent(new Camera(size.X / (float)size.Y));
+            mainCamera.GetComponent<Transform>()!.Position = new Vector3(0, 0, 10);
 
             AddGameObject(mainCamera);
 
             SetCamera(mainCamera.GetComponent<Camera>()!);
 
             var light = new GameObject(this, "light");
-            light.AddComponent(Light.Directional);
-            light.AddComponent(new MeshRender(MeshLoader.LoadMesh("Assets\\GreenCube.obj")));
+            light.AddComponent(Light.Point);
+            light.AddComponent(new MeshRender(MeshLoader.LoadMesh("Assets\\Cube.obj")));
 
 
             AddGameObject(light);
 
             var cube = new GameObject(this, "cube");
             cube.AddComponent(new MeshRender(MeshLoader.LoadMesh("Assets\\Cube.obj")));
-            cube.GetComponent<Transformable>()!.Position = new Vector3(0, 1, -1);
+            cube.GetComponent<Transform>()!.Position = new Vector3(0, 1, -3);
 
             AddGameObject(cube);
         }
@@ -57,7 +57,7 @@ namespace _3DGame.Editor
 
             activeCamera?.UpdateAspectRatio(EditorUI.SceneWindowSize.X / (float)EditorUI.SceneWindowSize.Y);
 
-            var transform = mainCamera.GetComponent<Transformable>();
+            var transform = mainCamera.GetComponent<Transform>();
             var camera = mainCamera.GetComponent<Camera>();
 
             if (Keyboard.IsKeyReleased(Keys.C))
@@ -76,8 +76,10 @@ namespace _3DGame.Editor
                 }
             }
 
-            if (camera != null && transform != null && Mouse.IsButtonDown(MouseButton.Right))
+            if (camera != null && transform != null && Mouse.IsButtonDown(MouseButton.Right) && EditorUI.SceneWindowFocused)
             {
+                game.GetWindow().CursorState = CursorState.Grabbed;
+
                 if (Keyboard.IsKeyDown(Keys.W))
                 {
                     transform.Position += camera.Front * cameraSpeed * deltaTime;
@@ -102,8 +104,11 @@ namespace _3DGame.Editor
                 var deltaX = Mouse.GetDeltaPosition().X;
                 var deltaY = Mouse.GetDeltaPosition().Y;
 
-                camera.Yaw += deltaX * sensitivity;
-                camera.Pitch -= deltaY * sensitivity;
+                camera.Rotation += new Vector3(deltaX, -deltaY, 0) * sensitivity;
+            }
+            else
+            {
+                game.GetWindow().CursorState = CursorState.Normal;
             }
         }
     }

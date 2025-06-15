@@ -13,7 +13,7 @@ namespace _3DGame.Core.Physics
     }
     public class RigidBody : Component
     {
-        private Transformable transformable;
+        private Transform transformable;
         private ColliderShape colliderShape;
 
         public Vector3 Position { get => transformable.Position; set => transformable.Position = value; }
@@ -34,7 +34,7 @@ namespace _3DGame.Core.Physics
         {
             Type = type;
 
-            transformable = new Transformable();
+            transformable = new Transform();
             colliderShape = null!;
 
             MassData = new MassData(40);
@@ -44,7 +44,7 @@ namespace _3DGame.Core.Physics
 
         public override void Start()
         {
-            transformable = GameObject?.GetComponent<Transformable>()!;
+            transformable = GameObject?.GetComponent<Transform>()!;
 
             colliderShape = GameObject?.GetComponent<ColliderShape>()!;
 
@@ -109,11 +109,6 @@ namespace _3DGame.Core.Physics
                 return;
 
             AddLinearVelosity(v * MassData.InvMass);
-        }
-
-        public void OnCollided(CollidedEventArgs args)
-        {
-            GameObject?.GetComponent<ScriptComponent>()?.OnCollided(args);
         }
 
         public ColliderShape? GetCollider() => colliderShape?.Transform(Position, Rotation, Scale);

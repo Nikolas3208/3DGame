@@ -4,22 +4,38 @@ namespace _3DGame.Core.Ecs.Components
 {
     public class MeshRender : Component
     {
-        private Mesh[] meshs;
+        private Mesh? mesh;
+        private Material material;
 
         public MeshRender()
         {
-            meshs = new Mesh[0];
+            material = Material.BaseMaterial;
         }
 
-        public MeshRender(params Mesh[] meshs)
+        public MeshRender(Mesh mesh)
         {
-            this.meshs = meshs;
+            this.mesh = mesh;
+            material = Material.BaseMaterial;
         }
 
         public override void Draw(Renderer renderer)
         {
-            foreach (var mesh in meshs)
-                mesh?.Draw(renderer);
+            material?.Draw(renderer);
+            mesh?.Draw(renderer);
+            material?.UnbindTexture(renderer);
         }
+        public void SetMeshe(Mesh mesh)
+        {
+            this.mesh = mesh;
+        }
+
+        public Mesh? GetMesh() => mesh;
+
+        public void SetMaterial(Material material)
+        {
+            this.material = material;
+        }
+
+        public Material GetMaterial() => material;
     }
 }

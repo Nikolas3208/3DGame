@@ -12,8 +12,11 @@ namespace _3DGame.Core.Ecs.Components
 
     public class Light : Component
     {
-        public Vector3 Position { get; set; }
-        public Vector3 Direction { get; set; }
+        private float cutOff;
+        private float outerCutOff;
+
+        public Vector3 Position { get => transform.Position; set => transform.Position = value; }
+        public Vector3 Direction { get => transform.Rotation; set => transform.Rotation = value; }
 
         public Vector3 Diffuse { get; set; }
         public Vector3 Specular { get; set; }
@@ -25,8 +28,11 @@ namespace _3DGame.Core.Ecs.Components
         public float Constant { get; set; }
         public float Quadratic { get; set; }
 
-        public float CutOff { get; set; }
-        public float OuterCutOff { get; set; }
+        public float CutOff { get => cutOff; set { cutOff = value; CosCutOff = MathF.Cos(MathHelper.DegreesToRadians(value)); } }
+        public float OuterCutOff { get => outerCutOff; set { outerCutOff = value; CosOterCutOff = MathF.Cos(MathHelper.DegreesToRadians(value)); } }
+
+        public float CosCutOff { get; set; }
+        public float CosOterCutOff { get; set; }
 
         public LightType Type { get; set; } = LightType.Directional;
 
@@ -65,18 +71,10 @@ namespace _3DGame.Core.Ecs.Components
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
-
-            if(GameObject != null)
-            {
-                var transform = GameObject.GetComponent<Transformable>();
-
-                Position = transform!.Position;
-                Direction = transform!.Rotation;
-            }
         }
 
-        public static Light Directional => new Light(new Vector3(0.5f), new Vector3(0.2f), new Vector3(0.5f), new Vector4(1), 0, 0, 0, 0, 0, LightType.Directional);
-        public static Light Point => new Light(new Vector3(0.5f), new Vector3(0.2f), new Vector3(0.5f), new Vector4(1), 0.09f, 1f, 0.32f, 0, 0, LightType.Point);
-        public static Light Spot => new Light(new Vector3(0.5f), new Vector3(0.2f), new Vector3(0.5f), new Vector4(1), 0.09f, 1f, 0.32f, 12.5f, 17.5f, LightType.Point);
+        public static Light Directional => new Light(new Vector3(1f), new Vector3(1f), new Vector3(0.5f), new Vector4(1), 0, 0, 0, 0, 0, LightType.Directional);
+        public static Light Point => new Light(new Vector3(1f), new Vector3(1f), new Vector3(0.5f), new Vector4(1), 0.09f, 1f, 0.32f, 0, 0, LightType.Point);
+        public static Light Spot => new Light(new Vector3(1f), new Vector3(1f), new Vector3(0.5f), new Vector4(1), 0.09f, 1f, 0.32f, 12.5f, 17.5f, LightType.Spot);
     }
 }

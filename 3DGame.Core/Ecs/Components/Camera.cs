@@ -14,7 +14,20 @@ namespace _3DGame.Core.Ecs.Components
 
         public bool IsActive { get; set; } = false;
 
-        public Vector3 Position { get; private set; }
+        public Vector3 Position { get => transform.Position; }
+
+        public Vector3 Rotation 
+        { 
+            get => transform.Rotation;
+            set 
+            { 
+                transform.Rotation = value;
+                _pitch = MathHelper.DegreesToRadians(value.Y);
+                UpdateVectors();
+                _yaw = MathHelper.DegreesToRadians(value.X); 
+                UpdateVectors();
+            }
+        }
 
         public float AspectRatio { get; private set; }
 
@@ -35,36 +48,20 @@ namespace _3DGame.Core.Ecs.Components
             }
         }
 
-        public float Yaw
+        public Camera(float aspectRatio)
         {
-            get => MathHelper.RadiansToDegrees(_yaw);
-            set
-            {
-                _yaw = MathHelper.DegreesToRadians(value);
-                UpdateVectors();
-            }
-        }
-
-        public float Fov
-        {
-            get => MathHelper.RadiansToDegrees(_fov);
-            set
-            {
-                var angle = MathHelper.Clamp(value, 1f, 90f);
-                _fov = MathHelper.DegreesToRadians(angle);
-            }
-        }
-
-        public Camera(Vector3 position, float aspectRatio)
-        {
-            Position = position;
             AspectRatio = aspectRatio;
+        }
+
+        public override void Start()
+        {
+            base.Start();
+            transform.Rotation += new Vector3(-90, 0, 0); // Initial rotation to face forward
+            UpdateVectors();
         }
 
         public override void Update(float deltaTime)
         {
-            Position = GameObject!.GetComponent<Transformable>()!.Position;
-
             base.Update(deltaTime);
         }
 

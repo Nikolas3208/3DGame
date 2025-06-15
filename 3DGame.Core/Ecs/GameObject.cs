@@ -1,6 +1,6 @@
-﻿using System.Net.NetworkInformation;
-using _3DGame.Core.Ecs.Components;
+﻿using _3DGame.Core.Ecs.Components;
 using _3DGame.Core.Graphics;
+using _3DGame.Core.Physics;
 
 namespace _3DGame.Core.Ecs
 {
@@ -8,7 +8,7 @@ namespace _3DGame.Core.Ecs
     {
         public List<Component> components;
 
-        public string Name { get; set; }
+        public string Name;
 
         public Scene Scene { get; set; }
 
@@ -19,7 +19,7 @@ namespace _3DGame.Core.Ecs
 
             components = new List<Component>();
 
-            AddComponent(new Transformable());
+            AddComponent(new Transform());
         }
 
         public void Start()
@@ -39,14 +39,22 @@ namespace _3DGame.Core.Ecs
 
         public void Draw(Renderer renderer)
         {
-            renderer.Transform *= GetComponent<Transformable>()!.Transform;
+            renderer.Transform *= GetComponent<Transform>()!.TransformModel;
 
             components.ForEach(c => c.Draw(renderer));
         }
 
+        public void OnCollided(CollidedEventArgs args)
+        {
+            components.ForEach(c => c.OnCollided(args));
+        }
+
         public bool AddComponent(Component component)
         {
-            if (!components.Contains(component))
+            if (component == null)
+                return false;
+
+            if (components.FirstOrDefault(c => c.GetType() == component.GetType()) == null)
             {
                 components.Add(component);
                 component.GameObject = this;
@@ -68,6 +76,11 @@ namespace _3DGame.Core.Ecs
         public bool ContainsComponent<T>() where T : Component
         {
             return components.Find(c => c is T) == null ? false : true;
+        }
+
+        public bool RemoveComponent(Component component)
+        {
+            return components.Remove(component);
         }
     }
 }

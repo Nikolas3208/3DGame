@@ -10,7 +10,8 @@ public enum TextureType
     Diffuse,
     Normal,
     Specular,
-    CubeMap
+    CubeMap,
+    Depth
 }
 
 public class Texture
@@ -90,6 +91,6 @@ public class Texture
 
     ~Texture()
     {
-        GL.DeleteTexture(Handle);
+        //GL.DeleteTexture(Handle);
     }
 }

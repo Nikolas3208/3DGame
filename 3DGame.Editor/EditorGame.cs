@@ -1,7 +1,7 @@
 ﻿using _3DGame.Core;
 using _3DGame.Core.Buffers;
 using _3DGame.Core.Graphics;
-using ImGuiNET;
+using _3DGame.Core.Utils;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -19,10 +19,13 @@ namespace _3DGame.Editor
             frameBuffer = new FrameBuffer(nativeWindowSettings.ClientSize.X, nativeWindowSettings.ClientSize.Y);
             frameBuffer.Init();
 
+
             var editorScene = new EditorScene(nativeWindowSettings.ClientSize, this);
 
             AddScene(editorScene);
             SetActiveScene(editorScene);
+
+            EditorUI editorUI = new EditorUI(editorScene);
         }
 
         protected override void Follows(Window window)
@@ -39,8 +42,6 @@ namespace _3DGame.Editor
 
         protected override void Update(float deltaTime)
         {
-            EditorUI.SetScene(activeScene!);
-
             imGuiController.Update(window, deltaTime);
 
             base.Update(deltaTime);
